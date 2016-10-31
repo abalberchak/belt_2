@@ -1,0 +1,42 @@
+
+<% if @user.id == session[:id] %>
+	<form action='/sessions/delete', method='post'>
+		<input type="submit" value="Logout">
+		<input type="hidden" name="_method" value="delete">
+		<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+	</form>
+<% end %>
+
+
+
+<h2>Hi <%= @user.first_name %> <%= @user.last_name %>!</h2>
+
+<h2>Here are the organizations you may join:</h2>
+
+<% if @organization %>
+	<% @organization.each do |organization| %>
+		<h2><a href="/groups/<%= organization.id %>"><%= organization.name %></a></h2>
+		<h3>Members: <%= organization.memberships.count %></h3>
+		<h3><%= organization.description %></h3>
+
+
+		<% if organization.user_id == session[:id] %>
+			<form action="/groups/<%= organization.id %>/delete" method="post">
+				<input type="hidden" name="_method" value="delete">
+				<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+				<input type="submit" value="Delete">
+			</form>
+		<% end %>
+
+
+		
+	<% end %>
+<% end %>
+
+
+<form action="/groups" method='post'>
+	<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+	Name:<input type="text" name="name">
+	Description:<input type="text" name="description">
+	<input type="submit" value="Create">
+</form>

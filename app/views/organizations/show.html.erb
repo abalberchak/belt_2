@@ -1,0 +1,37 @@
+
+	<form action='/sessions/delete', method='post'>
+		<input type="submit" value="Logout">
+		<input type="hidden" name="_method" value="delete">
+		<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+	</form>
+
+<a href="/groups">Dashboard</a>	
+
+<h1><%= @organization.name %></h1>
+<h2><%= @organization.description %></h2>
+<h2>Created by: <%= User.find(@organization.user_id).first_name %> <%= User.find(@organization.user_id).last_name %></h2>
+<h2>Members:</h2>
+
+<% if @memberships %>
+	<% @memberships.each do |member| %>
+		<h4><%= User.find(member.user_id).first_name %> <%= User.find(member.user_id).last_name %></h4>
+	<% end %>
+<% end %>
+
+<% if @user.count == 0 %>
+<form action='/memberships/<%= @organization.id %>', method='post'>
+	<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+	<input type="submit" value="Join Group">
+</form>
+<% end %>
+
+
+<% if @user.count > 0 %>
+<form action='/memberships/<%= @organization.id %>/delete', method='post'>
+	<input type="hidden" name="_method" value="delete">
+	<input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+	<!-- <input type="hidden" name="organization_id" value="<%= @organization.id %>"> -->
+	<input type="submit" value="Leave Group">
+</form>
+<% end %>
+
